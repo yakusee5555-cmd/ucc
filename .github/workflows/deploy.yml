@@ -1,0 +1,37 @@
+name: Deploy UCC IDE to VPS
+
+# Manual trigger only — run from the Actions tab when you want to (re)deploy.
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to VPS over SSH
+        env:
+          VPS_SSH_PASSWORD: ${{ secrets.VPS_SSH_PASSWORD }}
+          VPS_HOST: 108.61.147.189
+          VPS_USER: root
+        run: |
+          set -e
+          if [ -z "$VPS_SSH_PASSWORD" ]; then
+            echo "ERROR: repo secret VPS_SSH_PASSWORD is not set."
+            echo "Add it at: repo Settings -> Secrets and variables -> Actions -> New repository secret"
+            exit 1
+          fi
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq sshpass
+          sshpass -p "$VPS_SSH_PASSWORD" ssh -o StrictHostKeyChecking=no -o ConnectTimeout=20 "$VPS_USER@$VPS_HOST" '
+            set -e
+            command -v git >/dev/null || { apt-get update -qq && apt-get install -y -qq git; }
+            command -v docker >/dev/null || { curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh; }
+            if [ -d /root/ucc/.git ]; then
+              cd /root/ucc && git pull --ff-only
+            else
+              rm -rf /root/ucc
+              git clone https://github.com/yakusee5555-cmd/ucc.git /root/ucc
+              cd /root/ucc
+            fi
+            bash deploy-vps.sh
+          '
