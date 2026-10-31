@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UCC Playground — C Compiler in Your Browser</title>
+<meta name="description" content="UCC: a tiny integer-only C compiler with a native swap(a, b) intrinsic. Compiled to WebAssembly — runs 100% in your browser, no server.">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/loader.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="logo">◈</span> UCC Playground <span class="sub">C compiler · VM · <code>swap(a, b)</code> intrinsic · <span class="wasm-badge">WebAssembly — runs in your browser</span></span></div>
+  <div class="controls">
+    <select id="templateSelect" title="Load an example program"></select>
+    <button id="runBtn" class="primary" title="Compile &amp; run (Ctrl+Enter)" disabled>▶ Run</button>
+    <button id="internalsBtn" title="Show compiler internals (tokens / AST / bytecode)">⚙ Internals</button>
+    <button id="themeBtn" title="Toggle dark / light theme">🌙</button>
+  </div>
+</header>
+
+<main class="layout">
+  <section class="editor-pane">
+    <div id="editor"></div>
+    <div class="hint">Ctrl+Enter to run · <code>swap(a, b)</code> is a built-in intrinsic — no headers needed · <span id="engineState">loading compiler…</span></div>
+  </section>
+
+  <section class="console-pane">
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="output" role="tab">Output</button>
+      <button class="tab" data-tab="input" role="tab">Input&nbsp;(stdin)</button>
+      <button class="tab" data-tab="errors" role="tab">Errors <span id="errCount" class="count"></span></button>
+      <span class="spacer"></span>
+      <button id="copyBtn" class="mini" title="Copy console output">Copy</button>
+      <button id="clearBtn" class="mini" title="Clear console">Clear</button>
+    </div>
+    <div class="tab-body">
+      <pre id="outputPane" class="pane active" aria-label="Program output"></pre>
+      <div id="inputPane" class="pane" aria-label="Standard input">
+        <textarea id="stdinText" spellcheck="false" placeholder="Text fed to the program's stdin on Run.&#10;Example for the calculator template:&#10;12 30&#10;1"></textarea>
+      </div>
+      <pre id="errorPane" class="pane" aria-label="Errors"></pre>
+    </div>
+    <div class="statusbar">
+      <span class="badge" id="badgeExit">exit: —</span>
+      <span class="badge" id="badgeTime">time: —</span>
+      <span class="spacer"></span>
+      <span class="conn" id="connState">loading…</span>
+    </div>
+  </section>
+
+  <aside id="internals" class="internals hidden" aria-label="Compiler internals">
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-itab="tokens" role="tab">Tokens</button>
+      <button class="tab" data-itab="ast" role="tab">AST</button>
+      <button class="tab" data-itab="bytecode" role="tab">Bytecode</button>
+      <span class="spacer"></span>
+      <button id="internalsLoad" class="mini" title="Re-run with inspection enabled">Reload</button>
+      <button id="internalsClose" class="mini" title="Close panel">✕</button>
+    </div>
+    <pre id="internalsPane" class="pane active">Run the program with this panel open to inspect tokens, AST and bytecode.</pre>
+  </aside>
+</main>
+
+<script src="ucc.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
