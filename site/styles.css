@@ -59,10 +59,29 @@ body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
   flex-wrap: wrap;
 }
 
-.brand { font-weight: 700; font-size: 16px; white-space: nowrap; }
-.brand .logo { color: var(--accent); }
-.brand .sub { font-weight: 400; font-size: 12px; color: var(--muted); margin-left: 6px; }
-.brand .sub code { font-family: ui-monospace, monospace; }
+.brand { display: flex; align-items: center; gap: 10px; white-space: nowrap; }
+.brand .mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff;
+  font-size: 15px;
+  flex: none;
+}
+.brand .name { font-weight: 700; font-size: 15px; letter-spacing: 0.2px; }
+.brand .tag {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-left: 1px solid var(--border);
+  padding-left: 10px;
+}
 
 .controls { display: flex; align-items: center; gap: 8px; margin-left: auto; flex-wrap: wrap; }
 
@@ -93,8 +112,6 @@ button.mini { padding: 3px 9px; font-size: 12px; }
   grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
   min-height: 0;
 }
-
-.layout.with-internals { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 0.9fr); }
 
 .editor-pane {
   display: flex;
@@ -242,37 +259,12 @@ button.mini { padding: 3px 9px; font-size: 12px; }
 .conn { color: var(--muted); font-size: 12px; }
 .conn.live { color: var(--ok); }
 
-/* ---------- internals drawer ---------- */
-
-.internals {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  min-height: 0;
-  background: var(--bg2);
-  border-left: 1px solid var(--border);
-}
-.internals.hidden { display: none; }
-.internals .tabs { padding-top: 6px; }
-#internalsPane { flex: 1; }
-
 /* ---------- responsive ---------- */
 
 @media (max-width: 900px) {
   body { overflow: auto; height: auto; min-height: 100vh; }
-  .layout, .layout.with-internals { grid-template-columns: 1fr; }
+  .layout { grid-template-columns: 1fr; }
   .editor-pane { border-right: none; border-bottom: 1px solid var(--border); height: 55vh; }
   .console-pane { height: 55vh; }
-  .internals { border-left: none; border-top: 1px solid var(--border); height: 55vh; }
-  .brand .sub { display: none; }
 }
 
-.wasm-badge {
-  display: inline-block;
-  font-size: 0.72em;
-  padding: 1px 8px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  opacity: 0.85;
-  vertical-align: 1px;
-}

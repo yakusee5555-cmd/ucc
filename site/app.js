@@ -38,19 +38,15 @@
   var stdinPos = 0;
   var stdoutBytes = [];
   var stderrBytes = [];
-  var internalsOpen = false;
-  var activeITab = 'tokens';
 
   // --------------------------------------------------------------------- dom
   function $(id) { return document.getElementById(id); }
   var runBtn = $('runBtn'), themeBtn = $('themeBtn');
-  var internalsBtn = $('internalsBtn');
   var outputPane = $('outputPane'), errorPane = $('errorPane');
   var stdinText = $('stdinText');
   var badgeExit = $('badgeExit'), badgeTime = $('badgeTime');
   var connState = $('connState'), errCount = $('errCount');
   var engineState = $('engineState');
-  var internalsPanel = $('internals'), internalsPane = $('internalsPane');
   var templateSelect = $('templateSelect');
 
   // ------------------------------------------------------------- wasm engine
@@ -175,20 +171,7 @@
       }
       res.timeMs = Math.max(1, Math.round(performance.now() - t0));
       showResult(res);
-      if (internalsOpen) loadInternals(source);
     }, 30);
-  }
-
-  // --------------------------------------------------------------- internals
-  function loadInternals(source) {
-    var src = source !== undefined ? source : (editor ? editor.getValue() : '');
-    var map = {
-      tokens: ['--dump-tokens'],
-      ast: ['--dump-ast'],
-      bytecode: ['--dump-bytecode']
-    };
-    var r = wasmRun(src, '', map[activeITab]);
-    internalsPane.textContent = r.stdout || r.stderr || '(empty)';
   }
 
   // -------------------------------------------------------------------- tabs
@@ -200,15 +183,6 @@
     outputPane.classList.toggle('active', name === 'output');
     $('inputPane').classList.toggle('active', name === 'input');
     errorPane.classList.toggle('active', name === 'errors');
-  }
-
-  function switchITab(name) {
-    activeITab = name;
-    var tabs = internalsPanel.querySelectorAll('.tab[data-itab]');
-    for (var i = 0; i < tabs.length; i++) {
-      tabs[i].classList.toggle('active', tabs[i].getAttribute('data-itab') === name);
-    }
-    loadInternals();
   }
 
   // ------------------------------------------------------------------ editor
@@ -382,12 +356,6 @@
         return function () { switchTab(el.getAttribute('data-tab')); };
       })(tabs[i]));
     }
-    var itabs = internalsPanel.querySelectorAll('.tab[data-itab]');
-    for (var j = 0; j < itabs.length; j++) {
-      itabs[j].addEventListener('click', (function (el) {
-        return function () { switchITab(el.getAttribute('data-itab')); };
-      })(itabs[j]));
-    }
   }
 
   function init() {
@@ -397,16 +365,6 @@
     initEditor();
     initWasm();
     runBtn.addEventListener('click', runCode);
-    internalsBtn.addEventListener('click', function () {
-      internalsOpen = !internalsOpen;
-      internalsPanel.classList.toggle('hidden', !internalsOpen);
-      if (internalsOpen) loadInternals();
-    });
-    $('internalsClose').addEventListener('click', function () {
-      internalsOpen = false;
-      internalsPanel.classList.add('hidden');
-    });
-    $('internalsLoad').addEventListener('click', function () { loadInternals(); });
     $('copyBtn').addEventListener('click', function () {
       var t = outputPane.textContent || '';
       if (navigator.clipboard) navigator.clipboard.writeText(t).catch(function () {});

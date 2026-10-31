@@ -10,11 +10,10 @@
 </head>
 <body>
 <header class="topbar">
-  <div class="brand"><span class="logo">◈</span> UCC Playground <span class="sub">C compiler · VM · <code>swap(a, b)</code> intrinsic · <span class="wasm-badge">WebAssembly — runs in your browser</span></span></div>
+  <div class="brand"><span class="mark">◈</span><span class="name">UCC Playground</span><span class="tag">C compiler</span></div>
   <div class="controls">
     <select id="templateSelect" title="Load an example program"></select>
     <button id="runBtn" class="primary" title="Compile &amp; run (Ctrl+Enter)" disabled>▶ Run</button>
-    <button id="internalsBtn" title="Show compiler internals (tokens / AST / bytecode)">⚙ Internals</button>
     <button id="themeBtn" title="Toggle dark / light theme">🌙</button>
   </div>
 </header>
@@ -49,17 +48,6 @@
     </div>
   </section>
 
-  <aside id="internals" class="internals hidden" aria-label="Compiler internals">
-    <div class="tabs" role="tablist">
-      <button class="tab active" data-itab="tokens" role="tab">Tokens</button>
-      <button class="tab" data-itab="ast" role="tab">AST</button>
-      <button class="tab" data-itab="bytecode" role="tab">Bytecode</button>
-      <span class="spacer"></span>
-      <button id="internalsLoad" class="mini" title="Re-run with inspection enabled">Reload</button>
-      <button id="internalsClose" class="mini" title="Close panel">✕</button>
-    </div>
-    <pre id="internalsPane" class="pane active">Run the program with this panel open to inspect tokens, AST and bytecode.</pre>
-  </aside>
 </main>
 
 <script src="ucc.js"></script>
